@@ -1,4 +1,4 @@
-def registry= "940090592876.dkr.ecr.us-east-1.amazonaws.com"
+def registry= "484907489332.dkr.ecr.us-east-1.amazonaws.com/project2-primus-learning"
 def tag = ""
 def ms = ""
 def region = "us-east-1"
@@ -48,9 +48,9 @@ pipeline{
                 script{
                     withAWS(region:"$region",credentials:'aws_creds'){
                         sh "aws eks update-kubeconfig --name vote-dev"
-                        sh 'curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.5/2024-01-04/bin/linux/amd64/kubectl'  
+                        sh 'curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.28.5/2024-01-04/bin/linux/amd64/kubectl'
                         sh 'chmod u+x ./kubectl'
-                        sh "./kubectl set image deploy/result result=${registry}/${ms}:${tag} -n vote "
+                        sh "./kubectl set image deploy/result result=${tag} -n vote "
                         sh "./kubectl rollout restart deploy/result -n vote"
                     }
                 }
@@ -78,5 +78,5 @@ def getTag(){
   } else {
     tag = "${version}-${env.BRANCH_NAME}"
   }
-return tag 
+return tag
 }
